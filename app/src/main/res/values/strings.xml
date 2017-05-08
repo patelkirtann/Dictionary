@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Dictionary</string>
+    <string name="exec_time">Exec_Time</string>
+    <string name="total_words_count">Total Words Count</string>
+    <string name="add_to_database">Add To Database</string>
+</resources>
