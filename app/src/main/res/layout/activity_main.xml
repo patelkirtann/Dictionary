@@ -30,7 +30,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/add_to_database" />
+            android:text="@string/add_to_database"
+            android:clickable="false"
+            android:textColor="@color/textRed"/>
+
+        <TextView
+            android:id="@+id/tv_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:text="@string/please_wait" />
 
     </LinearLayout>
 </ScrollView>

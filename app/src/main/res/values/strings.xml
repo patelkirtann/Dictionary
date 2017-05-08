@@ -3,4 +3,5 @@
     <string name="exec_time">Exec_Time</string>
     <string name="total_words_count">Total Words Count</string>
     <string name="add_to_database">Add To Database</string>
+    <string name="please_wait">Please Wait…\nFetching and Parsing Data</string>
 </resources>
