@@ -16,14 +16,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/total_words_count" />
+            android:text="@string/total_words_count"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tv_totalTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/exec_time" />
+            android:text="@string/exec_time"
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/bt_add"
@@ -41,6 +43,13 @@
             android:layout_gravity="center"
             android:textAlignment="center"
             android:text="@string/please_wait" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="48dp"
+            android:text="Note:\nPerformance Varies on Different Devices.\n\nFetching and Parsing:\nBest: 35sec\nWorst: 3.35min \n\nInserting to Database:\nBest: 16sec \nWorst: 27sec"
+            android:textStyle="italic"/>
 
     </LinearLayout>
 </ScrollView>

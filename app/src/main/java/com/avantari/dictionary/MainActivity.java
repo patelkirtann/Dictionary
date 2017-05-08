@@ -134,12 +134,25 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Data Parsed Successfully",
                     Toast.LENGTH_SHORT).show();
             tv_progress.setText("Done");
-            btAddToDb.setClickable(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                btAddToDb.setTextColor(getResources().getColor(R.color.textGreen, null));
-            } else {
-                btAddToDb.setTextColor(getResources().getColor(R.color.textGreen));
-            }
+            btClickable();
+        }
+    }
+
+    private void btClickable(){
+        btAddToDb.setClickable(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            btAddToDb.setTextColor(getResources().getColor(R.color.textGreen, null));
+        } else {
+            btAddToDb.setTextColor(getResources().getColor(R.color.textGreen));
+        }
+    }
+
+    private void btNotClickable(){
+        btAddToDb.setClickable(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            btAddToDb.setTextColor(getResources().getColor(R.color.textRed,null));
+        }else {
+            btAddToDb.setTextColor(getResources().getColor(R.color.textRed));
         }
     }
 
@@ -149,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            btAddToDb.setClickable(false);
+            btNotClickable();
             tv_progress.setText("Please Wait... \nInserting Data to Database");
             Log.i("Started", "Process Started");
         }
@@ -172,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("ResourceNotFound ", resources.getLocalizedMessage());
             }
             tv_progress.setText("Done");
-            btAddToDb.setClickable(true);
+            btClickable();
         }
     }
 }
