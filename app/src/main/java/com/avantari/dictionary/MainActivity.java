@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void processDone() {
-        
+
         // we are going to get total 176077 so we can use this if statement otherwise we can't
         if (wordList.size() == 176077) {
             Toast.makeText(MainActivity.this, "Data Parsed Successfully",
@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            btAddToDb.setClickable(false);
             tv_progress.setText("Please Wait... \nInserting Data to Database");
             Log.i("Started", "Process Started");
         }
@@ -171,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("ResourceNotFound ", resources.getLocalizedMessage());
             }
             tv_progress.setText("Done");
+            btAddToDb.setClickable(true);
         }
     }
 }
