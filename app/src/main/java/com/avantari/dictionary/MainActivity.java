@@ -19,7 +19,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,18 +38,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         database = DictionaryDatabase.getInstance(this);
         Button btAddToDb = (Button) findViewById(R.id.bt_add);
         tvTotalWords = (TextView) findViewById(R.id.tv_totalWords);
         tvTotalTime = (TextView) findViewById(R.id.tv_totalTime);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("Please Wait... \nFetching Data From Server");
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        showProgress();
+
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
@@ -67,16 +61,22 @@ public class MainActivity extends AppCompatActivity {
                     new Response.Listener<String>() {
                         // will get the String Response(HTML)
                         @Override
-                        public void onResponse(String response) {
+                        public void onResponse(final String response) {
                             // parse HTML data using Jsoup Library
                             document = Jsoup.parse(response);
                             parseData();
+
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    if (error != null)
-                        Log.e("DataError", error.getLocalizedMessage());
+                    try {
+                        if (error != null) {
+                            Log.e("DataError", error.getLocalizedMessage());
+                        }
+                    } catch (NullPointerException nullPointer) {
+                        Log.e("Null Pointer: ", nullPointer.getLocalizedMessage());
+                    }
                 }
             });
             // all requests will be Queued.
@@ -99,17 +99,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                Log.i("Start DB: ", "inserting");
-                progressDialog = new ProgressDialog(MainActivity.this);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setMessage("Please Wait... \nFetching Data From Server");
-                progressDialog.setIndeterminate(true);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-
                 // will start writing to Database and return the Total time in Second Unit
                 String totalTime = database.insertValue(wordList, descList);
 
-                progressDialog.dismiss();
                 try {
                     tvTotalTime.setText("Total Time to add data to Database: " + totalTime + "sec");
                     tvTotalWords.setText("Total words: " + wordList.size() + "Words");
@@ -122,22 +114,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void showProgress() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Please Wait... \nFetching from Server and Parsing...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
     private void parseData() {
-        // we can get the tag value from HTMl string with the use of Jsoup.
-        Elements element = document.select("p");
-        // we are removing the P tag from the string
-        String descriptionString = element.remove().toString();
-        // we will get all the P tab here which contains words and description
-        String[] desc = descriptionString.split("<p>");
+        // we will get all the P tag here which contains words and description
+        String[] desc = document.select("p").toString().split("<p>");
 
         // here we are going to parse data again and get the Words and Description.
         for (String aDesc : desc) {
-            Document innerParse = Jsoup.parse(aDesc);
-            Elements innerElement = innerParse.getAllElements();
-            String innerWord = innerElement.select("b").text().trim();
-            String innerDesc;
+            document = Jsoup.parse(aDesc);
+            // get words from B tag
+            String innerWord = document.select("b").text().trim();
             try {
-                innerDesc = innerElement.text().replaceFirst(innerWord, "");
+                // get description from P tab by removing Word
+                String innerDesc = document.text().replaceFirst(innerWord, "").trim();
                 wordList.add(innerWord);
                 descList.add(innerDesc);
             } catch (PatternSyntaxException pattern) {
@@ -146,6 +143,5 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("NullPointer", nullPointer.getLocalizedMessage());
             }
         }
-        element.clear();
     }
 }
